@@ -1,68 +1,75 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import {withStyles} from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import connect from "react-redux/es/connect/connect";
 import {withRouter} from "react-router-dom";
-import sortData from "./reducers/similarity.reducer";
+import Card from "@material-ui/core/es/Card/Card";
+import CardContent from "@material-ui/core/es/CardContent/CardContent";
+import Typography from "@material-ui/core/Typography";
+import CardActionArea from "@material-ui/core/es/CardActionArea/CardActionArea";
+import CardActions from "@material-ui/core/CardActions";
+import Button from "@material-ui/core/Button";
 
-const styles = theme => ({
-    root: {
-        width: '100%',
-        marginTop: theme.spacing.unit * 3,
-        overflowX: 'auto',
+const styles = {
+    card: {
+        minWidth: 275,
     },
-    table: {
-        minWidth: 700,
+    title: {
+        fontSize: 14,
     },
-});
+    pos: {
+        marginBottom: 12,
+    },
+};
 
 class ViewData extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-        };
+        this.state = {};
+        this.goToUpload = this.goToUpload.bind(this);
     }
 
-    componentWillUpdate(nextProps, nextState) {
-       console.log("update")
+    goToUpload(){
+        this.props.history.push('/upload')
     }
-    componentWillReceiveProps(nextProps, nextContext) {
-        console.log(nextProps);
-    }
-
     render() {
-        console.log("here");
         const {classes} = this.props;
-        const headers = this.props.sortedData && this.props.sortedData.duplicates && Object.keys(this.props.sortedData.duplicates[0]);
+        const duplicates = this.props.sortedData && this.props.sortedData.duplicates || [];
+        const nonDuplicates = this.props.sortedData && this.props.sortedData.nonDuplicates || [];
         return (
-            <Paper className={classes.root}>
-                <Table className={classes.table}>
-                    <TableHead>
-                        <TableRow>
-                            {headers && headers.length > 0 && headers.map(header => (
-                                <TableCell>
-                                    {header}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {this.props.sortedData && this.props.sortedData.duplicates && this.props.sortedData.duplicates.map(row => (
-                            <TableRow key={row.id}>
-                                {headers && headers.length > 0 && headers.map(header => (
-                                    <TableCell>
-                                        {row[header]}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+            <Paper>
+                <Card className={classes.card}>
+                    <Typography className={classes.title} color="textSecondary" gutterBottom>
+                        Duplicates
+                    </Typography>
+                    <CardActionArea>
+                        <CardContent>
+                            {duplicates.length > 0 && duplicates.map(row => (
+                                <div>
+                                    {Object.values(row).join(",")}
+                                </div>
+                            ))
+                            }
+                        </CardContent>
+                        <Typography className={classes.title} color="textSecondary" gutterBottom>
+                            NonDuplicates
+                        </Typography>
+                        <CardContent>
+                            {nonDuplicates.length > 0 && nonDuplicates.map(row => (
+                                <div>
+                                    {Object.values(row).join(",")}
+                                </div>
+                            ))
+                            }
+                        </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                        <Button onClick={this.goToUpload} variant="contained" color="primary" size="small">
+                            Back
+                        </Button>
+                    </CardActions>
+                </Card>
+
             </Paper>
         );
     }
@@ -75,6 +82,5 @@ function mapStateToProps(state) {
     }
 }
 
-export default withRouter(connect(mapStateToProps, {
-})(withStyles(styles)(ViewData)));
+export default withRouter(connect(mapStateToProps, {})(withStyles(styles)(ViewData)));
 
