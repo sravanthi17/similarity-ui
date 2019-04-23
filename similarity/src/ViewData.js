@@ -31,7 +31,7 @@ class ViewData extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            value: 0
+            value: 1
         };
         this.goToUpload = this.goToUpload.bind(this);
     }
@@ -50,12 +50,16 @@ class ViewData extends React.Component {
             <Paper>
                 <AppBar position="static">
                     <Tabs value={this.state.value} onChange={this.handleChange}>
+                        <Button variant="contained" onClick={this.goToUpload} color="secondary" size="small">
+                            Back
+                        </Button>
                         <Tab label="Duplicates" />
                         <Tab label="NonDuplicates" />
                     </Tabs>
                 </AppBar>
-                {this.state.value === 0 && <CustomTable data={duplicates}></CustomTable>}
-                {this.state.value === 1 && <CustomTable data={nonDuplicates}></CustomTable>}
+
+                {this.state.value === 1 && <CustomTable data={duplicates}></CustomTable>}
+                {this.state.value === 2 && <CustomTable data={nonDuplicates}></CustomTable>}
                 {/*<Card className={classes.card}>*/}
                     {/*<CardActions>*/}
                         {/*<Button onClick={this.goToUpload} variant="contained" color="primary" size="small">*/}
